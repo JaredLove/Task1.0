@@ -1,12 +1,14 @@
 let taskIdCounter = 0;
-//submit button within the task form
+    //submit button within the task form
 const buttonEl = document.querySelector("#save-task");
-//tasks to do ul
+    //tasks to do ul
 const tasksToDoEl = document.querySelector("#tasks-to-do");
-//form 
+    //form 
 const formEl = document.querySelector("#task-form");
+    //main element
+const pageContentEl = document.querySelector("#page-content");
 
-// event handler when the user submits
+    // event handler when the user submits
 const taskFormHandler = function(e){
 
         //  prevent the default response by the browser to refresh the page
@@ -112,5 +114,32 @@ const createTaskActions = function(taskId){
     return actionContainerEl;
 };
 
-//event listener to listen for the submit
+const deleteTask = function(taskId){
+    let taskSelected = document.querySelector(`.task-item[data-task-id='${taskId}']`);
+        //using the remove method from the DOM it will remove the task item from the page
+    taskSelected.remove();
+}
+
+const editTask = function(taskId){
+    console.log(taskId);
+}
+
+const taskButtonHandler = function(event){
+    console.log(event.target);
+
+    if(event.target.matches(".delete-btn")){
+
+        let taskId = event.target.getAttribute("data-task-id");
+        console.log(`Task with the ID of ${taskId} will be deleted`);
+        deleteTask(taskId);
+    }else if(event.target.matches(".edit-btn")){
+        let taskId = event.target.getAttribute("data-task-id");
+        console.log(`Task with the ID of ${taskId} will be edited`);
+        editTask(taskId);
+    }
+}
+
+    //event listener to listen for the submit
 formEl.addEventListener("submit", taskFormHandler);
+    //event listener to listen for clicks within main
+pageContentEl.addEventListener("click", taskButtonHandler);
