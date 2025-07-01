@@ -1,3 +1,4 @@
+let taskIdCounter = 0;
 //submit button within the task form
 const buttonEl = document.querySelector("#save-task");
 //tasks to do ul
@@ -41,6 +42,10 @@ const createTaskEl = function(taskDataObj){
 
         // setting the class name of the li element we created with "task-item"
     listItemEl.className = "task-item";
+
+        // add task id as custom attribute
+    listItemEl.setAttribute("data-task-id", taskIdCounter);
+
             //create div to hold task info and add to list item
     const taskInfoEl = document.createElement("div");
 
@@ -54,10 +59,58 @@ const createTaskEl = function(taskDataObj){
         //append the div we created to the li we created
     listItemEl.appendChild(taskInfoEl);
 
+    const taskActionsEl = createTaskActions(taskIdCounter);
+    listItemEl.appendChild(taskActionsEl);
+
         // appending our li element we created and its content to the ul element
     tasksToDoEl.appendChild(listItemEl);
 
+        // increase task counter for next unique id
+    taskIdCounter++;
+
 }
+
+const createTaskActions = function(taskId){
+        //create div element for our task actions
+    const actionContainerEl = document.createElement("div");
+        //give it a class name
+    actionContainerEl.className = "task-actions";
+        //create the edit button
+    const editButtonEl = document.createElement("button");
+        //set textcontent to edit
+    editButtonEl.textContent = "Edit";
+    editButtonEl.className = "btn edit-btn";
+    editButtonEl.setAttribute("data-task-id", taskId);
+
+    actionContainerEl.appendChild(editButtonEl);
+
+    const deleteButtonEl = document.createElement("button");
+    deleteButtonEl.textContent = "Delete";
+    deleteButtonEl.className = "btn delete-btn";
+    deleteButtonEl.setAttribute("data-task-id", taskId);
+
+    actionContainerEl.appendChild(deleteButtonEl);
+
+    const statusSelectEl = document.createElement("select");
+    statusSelectEl.className = "select-status";
+    statusSelectEl.setAttribute("name", "status-change");
+    statusSelectEl.setAttribute("data-task-id", taskId);
+
+    actionContainerEl.appendChild(statusSelectEl);
+
+    const statusChoices = ["To Do", "In Progres", "Completed"];
+    for(let i = 0; i < statusChoices.length; i++){
+            // create option element
+        const statusOptionEl = document.createElement("option");
+        statusOptionEl.textContent = statusChoices[i];
+        statusOptionEl.setAttribute("value", statusChoices[i]);
+
+            //append the select
+        statusSelectEl.appendChild(statusOptionEl);
+    }
+
+    return actionContainerEl;
+};
 
 //event listener to listen for the submit
 formEl.addEventListener("submit", taskFormHandler);
