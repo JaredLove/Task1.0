@@ -1,4 +1,4 @@
-let taskIdCounter = 0;
+
     //submit button within the task form
 const buttonEl = document.querySelector("#save-task");
     //tasks to do ul
@@ -7,6 +7,12 @@ const tasksToDoEl = document.querySelector("#tasks-to-do");
 const formEl = document.querySelector("#task-form");
     //main element
 const pageContentEl = document.querySelector("#page-content");
+
+const tasksInProgressEl = document.querySelector("#tasks-in-progress");
+
+const tasksCompletedEl = document.querySelector("#tasks-completed");
+
+let taskIdCounter = 0;
 
     // event handler when the user submits
 const taskFormHandler = function(e){
@@ -107,7 +113,7 @@ const createTaskActions = function(taskId){
 
     actionContainerEl.appendChild(statusSelectEl);
 
-    const statusChoices = ["To Do", "In Progres", "Completed"];
+    const statusChoices = ["To Do", "In Progress", "Completed"];
     for(let i = 0; i < statusChoices.length; i++){
             // create option element
         const statusOptionEl = document.createElement("option");
@@ -155,6 +161,25 @@ const editTask = function(taskId){
     formEl.setAttribute("data-task-id", taskId); 
 }
 
+const taskStatusChangeHandler = function(event){
+    console.log(event.target)
+    console.log(event.target.getAttribute("data-task-id"));
+        //get the task item's id
+    const taskId = event.target.getAttribute("data-task-id");
+        //get the currently selected option's value and convert to lowercase
+    const statusValue = event.target.value.toLowerCase();
+        //find the parent task item element based on id
+    const taskSelected = document.querySelector(`.task-item[data-task-id='${taskId}']`);
+
+    if(statusValue === "to do"){
+        tasksToDoEl.appendChild(taskSelected);
+    }else if(statusValue === "in progress"){
+        tasksInProgressEl.appendChild(taskSelected);
+    }else if(statusValue === "completed"){
+        tasksCompletedEl.appendChild(taskSelected);
+    }
+}
+
 const taskButtonHandler = function(event){
     console.log(event.target);
 
@@ -174,3 +199,5 @@ const taskButtonHandler = function(event){
 formEl.addEventListener("submit", taskFormHandler);
     //event listener to listen for clicks within main
 pageContentEl.addEventListener("click", taskButtonHandler);
+    //event listener to listen for changes 
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
